@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Joyas Misterio | Operación en Vivo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Joyas Misterio · Asistente de Vivo</h1>
+      <div class="actions-row">
+        <button id="simulateBtn" class="primary">+ Simular comentario</button>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="panel">
+        <h2>Cola de atención priorizada</h2>
+        <p class="muted">Compra → Precio → Consulta general</p>
+        <div id="tickets" class="tickets"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Productos</h2>
+        <input id="productSearch" type="text" placeholder="Buscar producto..." />
+        <ul id="productList"></ul>
+      </section>
+
+      <section class="panel full">
+        <h2>Nuevo comentario manual</h2>
+        <form id="manualForm" class="form-grid">
+          <input id="customerName" placeholder="Nombre en Facebook" required />
+          <input id="message" placeholder="Comentario" required />
+          <button type="submit" class="primary">Registrar</button>
+        </form>
+      </section>
+
+      <section class="panel full">
+        <h2>Historial importante</h2>
+        <div id="history" class="history"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
