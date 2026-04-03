@@ -3,6 +3,7 @@
 MVP funcional para operación rápida de ventas en vivo.
 
 > ⚡ Si te perdiste con dónde pegar cada archivo, abrí primero **START_HERE.md** (guía paso a paso para principiantes).
+> 🧭 Consejo rápido: editás archivos en VS Code y ejecutás comandos en la terminal integrada de VS Code.
 
 ## A) Idea general del sistema
 Un **panel web operativo en tiempo real** para que dos personas puedan:

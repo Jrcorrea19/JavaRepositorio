@@ -2,6 +2,15 @@
 
 Perfecto: esta guía es para vos si pensaste **"no sé dónde poner cada archivo"**.
 
+## 0) ¿En consola o en Visual Studio Code?
+Las dos cosas:
+- **Visual Studio Code**: para crear/editar archivos y pegar el código.
+- **Consola/terminal**: para ejecutar comandos (`pip install`, `uvicorn`, `python -m http.server`).
+
+En VS Code abrí la carpeta del proyecto y luego abrí la terminal integrada con **Terminal > New Terminal**.
+Así hacés todo en la misma app, sin complicarte.
+
+
 ## 1) Creá una carpeta de proyecto
 ```bash
 mkdir JoyasMisterio
