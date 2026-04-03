@@ -2,6 +2,8 @@
 
 MVP funcional para operación rápida de ventas en vivo.
 
+> ⚡ Si te perdiste con dónde pegar cada archivo, abrí primero **START_HERE.md** (guía paso a paso para principiantes).
+
 ## A) Idea general del sistema
 Un **panel web operativo en tiempo real** para que dos personas puedan:
 - ver comentarios entrantes,
