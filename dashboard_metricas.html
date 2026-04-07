@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Joyas Misterio</title>
+</head>
+<body>
+
+<h1>Panel de Métricas</h1>
+
+<p id="total_ventas"></p>
+<p id="cantidad_ventas"></p>
+<p id="ticket_promedio"></p>
+
+<script type="module">
+
+import {
+    calcular_total_ventas,
+    calcular_cantidad_ventas,
+    calcular_ticket_promedio
+} from "./sistema_datos/calculo_metricas.js";
+
+document.getElementById("total_ventas").innerText =
+"Total vendido: $" + calcular_total_ventas();
+
+document.getElementById("cantidad_ventas").innerText =
+"Cantidad de ventas: " + calcular_cantidad_ventas();
+
+document.getElementById("ticket_promedio").innerText =
+"Ticket promedio: $" + calcular_ticket_promedio();
+
+</script>
+
+</body>
+</html>
