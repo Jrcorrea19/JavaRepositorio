@@ -9,7 +9,7 @@ from sqlalchemy import case, desc, select
 from sqlalchemy.orm import Session
 
 from .classifier import detect_priority, detect_product
-from .database import SessionLocal, init_db
+from .database import FabricaDeSesiones, inicializar_base_de_datos, obtener_sesion_de_base_de_datos
 from .models import AttentionPriority, Comment, Product, TicketStatus
 from .realtime import ConnectionManager
 from .schemas import CommentIn, CommentOut, CommentStatusUpdate, ProductOut
@@ -35,22 +35,14 @@ SIMULATED_COMMENTS = [
 ]
 
 
-def get_db() -> Session:
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 @app.on_event("startup")
 def on_startup() -> None:
-    init_db()
+    inicializar_base_de_datos()
     seed_products()
 
 
 def seed_products() -> None:
-    db = SessionLocal()
+    db = FabricaDeSesiones()
     try:
         if db.scalar(select(Product.id).limit(1)):
             return
@@ -72,7 +64,7 @@ def health() -> dict[str, str]:
 
 
 @app.get("/products", response_model=list[ProductOut])
-def list_products(search: str | None = Query(default=None), db: Session = Depends(get_db)) -> list[Product]:
+def list_products(search: str | None = Query(default=None), db: Session = Depends(obtener_sesion_de_base_de_datos)) -> list[Product]:
     stmt = select(Product)
     if search:
         stmt = stmt.where(Product.name.ilike(f"%{search}%"))
@@ -81,7 +73,7 @@ def list_products(search: str | None = Query(default=None), db: Session = Depend
 
 
 @app.get("/tickets", response_model=list[CommentOut])
-def list_tickets(limit: int = 50, db: Session = Depends(get_db)) -> list[Comment]:
+def list_tickets(limit: int = 50, db: Session = Depends(obtener_sesion_de_base_de_datos)) -> list[Comment]:
     priority_order = case(
         (Comment.priority == AttentionPriority.PURCHASE, 0),
         (Comment.priority == AttentionPriority.PRICE, 1),
@@ -96,7 +88,7 @@ def list_tickets(limit: int = 50, db: Session = Depends(get_db)) -> list[Comment
 
 
 @app.post("/comments", response_model=CommentOut, status_code=201)
-async def create_comment(payload: CommentIn, db: Session = Depends(get_db)) -> Comment:
+async def create_comment(payload: CommentIn, db: Session = Depends(obtener_sesion_de_base_de_datos)) -> Comment:
     product_names = list(db.scalars(select(Product.name)).all())
     priority = detect_priority(payload.message)
     product_name = detect_product(payload.message, product_names)
@@ -121,7 +113,7 @@ async def create_comment(payload: CommentIn, db: Session = Depends(get_db)) -> C
 async def update_ticket_status(
     ticket_id: int,
     payload: CommentStatusUpdate,
-    db: Session = Depends(get_db),
+    db: Session = Depends(obtener_sesion_de_base_de_datos),
 ) -> Comment:
     comment = db.get(Comment, ticket_id)
     if not comment:
@@ -138,7 +130,7 @@ async def update_ticket_status(
 
 
 @app.post("/simulate", response_model=CommentOut, status_code=201)
-async def simulate_comment(db: Session = Depends(get_db)) -> Comment:
+async def simulate_comment(db: Session = Depends(obtener_sesion_de_base_de_datos)) -> Comment:
     customer_name, message = random.choice(SIMULATED_COMMENTS)
     payload = CommentIn(customer_name=customer_name, message=message)
     return await create_comment(payload=payload, db=db)
@@ -147,7 +139,7 @@ async def simulate_comment(db: Session = Depends(get_db)) -> Comment:
 @app.get("/history", response_model=list[CommentOut])
 def history(
     limit: int = Query(default=100, le=300),
-    db: Session = Depends(get_db),
+    db: Session = Depends(obtener_sesion_de_base_de_datos),
 ) -> list[Comment]:
     stmt = select(Comment).order_by(desc(Comment.created_at)).limit(limit)
     return list(db.scalars(stmt).all())
